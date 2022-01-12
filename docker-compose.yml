@@ -1,0 +1,34 @@
+version: '3.7'
+
+services:
+  rabbit:
+    restart: always
+    image: rabbitmq
+    environment:
+      RABBITMQ_NODENAME: "rabbit@localhost"
+      RABBITMQ_ERLANG_COOKIE: "SWQOKODSQALRPCLNMEQG"
+      RABBITMQ_DEFAULT_USER: "rabbitmq"
+      RABBITMQ_DEFAULT_PASS: "rabbitmq"
+      RABBITMQ_DEFAULT_VHOST: "/"
+    ports:
+      - "5672:5672"
+
+  db:
+    image: postgres
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
+      
+  web:
+    build: ./test_task
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./test_task/:/app/
+    ports:
+      - "8000:8000"
+    environment:
+      - POSTGRES_NAME=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    depends_on:
+      - db
+      - rabbit
