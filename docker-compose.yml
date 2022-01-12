@@ -48,7 +48,18 @@ services:
     depends_on:
       - db
       - rabbit
-    # celery -A test_task worker --loglevel=INFO
+    # restart: on-failure
+
+  beat:
+    build: ./test_task
+    command: celery -A test_task beat --loglevel=INFO
+    volumes:
+      - ./test_task/:/app/
+    networks:
+      - main
+    depends_on:
+      - db
+      - rabbit
 
   web:
     build: ./test_task
