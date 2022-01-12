@@ -23,7 +23,6 @@ def handle_ticket(ticket_id, url):
     except requests.exceptions.ConnectionError:
         result_json = {'error': 'Could not connect to server'}
     
-    
     result = Result.objects.get(ticket_id=ticket_id)
     result.result = result_json
     result.save()

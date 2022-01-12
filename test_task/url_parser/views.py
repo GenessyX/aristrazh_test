@@ -8,15 +8,18 @@ from url_parser.serializers import TicketSerializer, ResultSerializer
 
 
 class TicketViewSet(mixins.CreateModelMixin,
-                    mixins.DestroyModelMixin,
-                    mixins.ListModelMixin,
                     viewsets.GenericViewSet):
+    """
+    Add a new ticket to the queue to parse html from
+    """
     queryset = Ticket.objects.all()
     serializer_class = TicketSerializer
 
 
 class ResultViewSet(mixins.RetrieveModelMixin,
-                    mixins.ListModelMixin,
                     viewsets.GenericViewSet):
+    """
+    Endpoint for getting results
+    """
     queryset = Result.objects.all()
     serializer_class = ResultSerializer
