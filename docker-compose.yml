@@ -48,7 +48,7 @@ services:
     depends_on:
       - db
       - rabbit
-    # restart: on-failure
+    restart: on-failure
 
   beat:
     build: ./test_task
@@ -60,6 +60,7 @@ services:
     depends_on:
       - db
       - rabbit
+    restart: on-failure
 
   web:
     build: ./test_task
@@ -74,6 +75,7 @@ services:
       - POSTGRES_NAME=postgres
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
+    restart: on-failure
     depends_on:
       - db
       - rabbit
