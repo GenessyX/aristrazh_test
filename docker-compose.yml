@@ -4,6 +4,8 @@ services:
   rabbit:
     restart: always
     image: rabbitmq
+    networks:
+      - main
     environment:
       RABBITMQ_NODENAME: "rabbit@localhost"
       RABBITMQ_ERLANG_COOKIE: "SWQOKODSQALRPCLNMEQG"
@@ -12,17 +14,49 @@ services:
       RABBITMQ_DEFAULT_VHOST: "/"
     ports:
       - "5672:5672"
+      - "15672:15672"
+    expose:
+      - 5672
+      
 
   db:
     image: postgres
     volumes:
       - ./data/db:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    expose:
+      - 5432
+    networks:
+      - main
+    restart: on-failure
       
+  worker:
+    build: ./test_task
+    command: celery -A test_task worker --loglevel=INFO
+    volumes:
+      - ./test_task/:/app/
+    networks:
+      - main
+    environment:
+      - DEBUG=1
+      - POSTGRES_NAME=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    depends_on:
+      - db
+      - rabbit
+    # celery -A test_task worker --loglevel=INFO
+
   web:
     build: ./test_task
     command: python manage.py runserver 0.0.0.0:8000
     volumes:
       - ./test_task/:/app/
+    networks:
+      - main
     ports:
       - "8000:8000"
     environment:
@@ -32,3 +66,6 @@ services:
     depends_on:
       - db
       - rabbit
+
+networks:
+  main:

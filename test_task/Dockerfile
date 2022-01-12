@@ -7,8 +7,6 @@ WORKDIR /app
 
 RUN pip install --upgrade pip
 COPY requirements.txt /app/
-RUN pip install --no-cache-dir --default-timeout 100 -r requirements.txt
+RUN pip install --no-cache-dir --default-timeout=100 -r requirements.txt
 
 COPY . /app/
-
-# CMD ["python", "manage.py", "migrate"]

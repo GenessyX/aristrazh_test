@@ -5,7 +5,7 @@ import requests
 class TicketSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ticket
-        fields = ['id', 'url']
+        fields = ['uuid', 'url']
 
     def validate(self, attrs):
         # if attrs.get('url'):
@@ -18,4 +18,4 @@ class TicketSerializer(serializers.ModelSerializer):
 class ResultSerializer(serializers.ModelSerializer):
     class Meta:
         model = Result
-        fields = ['ticket_id', 'result']
+        fields = ['ticket_id']

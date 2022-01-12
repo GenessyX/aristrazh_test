@@ -8,7 +8,7 @@ from django.dispatch import receiver
 
 # Create your models here.
 class Ticket(models.Model):
-    id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, primary_key=True)
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, primary_key=True)
     url = models.URLField()
 
     def save(self, *args, **kwargs):
@@ -28,13 +28,14 @@ class Ticket(models.Model):
 
 @receiver(post_save, sender=Ticket)
 def init_result(sender, instance, **kwargs):
+    # pass
     result = Result.objects.create(
-        ticket_id=instance.id,
+        ticket_id=instance.uuid,
         result="In queue"
     )
     from url_parser.tasks import handle_ticket
 
-    handle_ticket.delay(instance.id, instance.url)
+    handle_ticket.delay(instance.uuid, instance.url)
 
     # print(sender)
     # print(instance)
