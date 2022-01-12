@@ -9,14 +9,35 @@
 3. Входящие данные должны валидироваться, ошибки доступности URL, ответа внешних
 серверов и т.д. обрабатываться.
 
-# Локальный запуск приложения
+# Сборка приложения
 
 ```
 docker-compose build
+docker-compose run web python manage.py migrate
+docker-compose down
+```
+# Запуск приложения
+
+```
 docker-compose run
 ```
 
 ### Получить доступ к оболочке контейнера
 ```
 docker exec -it container_name bash
+```
+
+# Эндпоинты
+
+```
+http://127.0.0.1:8000/tickets/
+http://127.0.0.1:8000/results/{ticket.uuid}
+```
+
+# Документация
+
+Доступна по адресам:
+```
+http://127.0.0.1:8000/redoc/
+http://127.0.0.1:8000/swagger/
 ```
